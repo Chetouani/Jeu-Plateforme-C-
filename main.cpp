@@ -1,8 +1,8 @@
-#include <iostream>
-
+#include <QApplication>
+#include <mainwindow.h>
 #include <SDL.h>
 #include <SDL_image.h>
-
+#include <iostream>
 #include "monde.h"
 #include "evenement.h"
 #include "deplacement.h"
@@ -14,26 +14,30 @@ const int HAUTEUR_FENETRE = 600;
 
 using namespace std;
 
-void AfficherPerso(SDL_Rect* posi,SDL_Surface* perso,SDL_Surface* screen,int xscroll,int yscroll){
-
+void AfficherPerso(SDL_Rect* posi,SDL_Surface* perso,SDL_Surface* screen,int xscroll,int yscroll)
+{
     SDL_Rect positionsurecran = *posi;
     positionsurecran.x -= xscroll;
     positionsurecran.y -= yscroll;
     SDL_BlitSurface(perso,NULL,screen,&positionsurecran);
-
 }
 
-int main(){
+int main(int argc, char **argv){
 
+    QApplication a(argc, argv);
+    MainWindow w;
+    w.show();
+    a.exec();
+    if (w.quit) //Si l'user a cliqué sur "Quitter"
+        return 1;
     // initialise SDL
-    if ( SDL_Init(SDL_INIT_VIDEO) == -1){
+    if ( SDL_Init(SDL_INIT_VIDEO) == -1) {
         cerr << "Erreur d'initialisation de SDL" << endl;
         exit(EXIT_FAILURE);
     }
-
     // notre fenetre ,param (taille,taille,couleur,option)
-    SDL_Surface * fenetre = SDL_SetVideoMode(LARGEUR_FENETRE
-                                             ,HAUTEUR_FENETRE,32,SDL_HWSURFACE);
+    SDL_Surface * fenetre = SDL_SetVideoMode(LARGEUR_FENETRE,HAUTEUR_FENETRE,
+                                             32,SDL_HWSURFACE);
 
     // renomer la fenetre
     SDL_WM_SetCaption("Jeu de plateforme",NULL);
@@ -44,7 +48,6 @@ int main(){
     // remplir une surface d'une couleur
     // param -> la Surface a remplir, la partie de la surface , la couleur UINT32
     //SDL_FillRect(fenetre,NULL,couleurFond);
-
 
     // notre personnage
     SDL_Surface * perso =  IMG_Load("persoD.png");

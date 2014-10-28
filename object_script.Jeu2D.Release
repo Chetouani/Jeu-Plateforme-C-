@@ -1,0 +1,12 @@
+INPUT(
+./release\main.o
+./release\monde.o
+./release\tuile.o
+./release\evenement.o
+./release\deplacement.o
+./release\exceptiongame.o
+./release\gestionjeu.o
+./release\mainwindow.o
+./release\qrc_images.o
+./release\moc_mainwindow.o
+);

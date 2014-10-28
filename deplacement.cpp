@@ -10,7 +10,7 @@ Deplacement::Deplacement(int lF, int hF){
 // avec un vecteurX = 0 et un vecteurY = + 2
 void Deplacement::RecupererVecteur(Evenement* in,int* vx,int* vy){
     int vitesse = VITESSE_JOUEUR;
-    *vx = *vy = 0;
+    *vx = *vy = 0; 
     if (in->key[SDLK_UP]){
         *vy = -vitesse;
     }
@@ -25,7 +25,7 @@ void Deplacement::RecupererVecteur(Evenement* in,int* vx,int* vy){
     }
 }
 // on essaye un deplacement, si on vas pas sur un obstacle
-bool Deplacement::EssaiDeplacement(Monde* carte,SDL_Rect* perso,int vx,int vy){
+bool Deplacement::EssaiDeplacement(Monde* carte,SDL_Rect* perso,int vx,int vy) {
     SDL_Rect test;
     test = *perso;
     test.x+=vx;
@@ -37,7 +37,7 @@ bool Deplacement::EssaiDeplacement(Monde* carte,SDL_Rect* perso,int vx,int vy){
     return false;
 }
 // permet de ce coller au obstacle
-void Deplacement::Affine(Monde* carte,SDL_Rect* perso,int vx,int vy){
+void Deplacement::Affine(Monde* carte,SDL_Rect* perso,int vx,int vy) {
     int i;
     for( i=0 ; i< (int) abs(vx) ; i++){
         if (!EssaiDeplacement(carte,perso,signeValeur(vx),0))
@@ -49,7 +49,8 @@ void Deplacement::Affine(Monde* carte,SDL_Rect* perso,int vx,int vy){
     }
 }
 
-void Deplacement::Deplace(Monde* carte,SDL_Rect* perso,int vx,int vy,int LARGEUR_TILE,int HAUTEUR_TILE){
+void Deplacement::Deplace(Monde* carte,SDL_Rect* perso,int vx,int vy,
+                          int LARGEUR_TILE,int HAUTEUR_TILE){
     // PAS UTILE CAR LA VITESSE DU JOUEUR NE DEPASSE PAS LA TAILLE DU PERSO
     /*
     if (vx>=LARGEUR_TILE || vy>=HAUTEUR_TILE){
@@ -64,13 +65,15 @@ void Deplacement::Deplace(Monde* carte,SDL_Rect* perso,int vx,int vy,int LARGEUR
     Affine(carte,perso,vx,vy);
 }
 
-void Deplacement::Evolue(Evenement* in,Monde* carte,SDL_Rect* perso,int LARGEUR_TILE,int HAUTEUR_TILE){
+void Deplacement::Evolue(Evenement* in,Monde* carte,SDL_Rect* perso,
+                         int LARGEUR_TILE,int HAUTEUR_TILE) {
     int vx,vy;
     RecupererVecteur(in,&vx,&vy);
     Deplace(carte,perso,vx,vy,LARGEUR_TILE,HAUTEUR_TILE);
 }
 
-void Deplacement::bougerLaMap(Monde * monde,SDL_Rect * positionPerso,Evenement * event){
+void Deplacement::bougerLaMap(Monde * monde,SDL_Rect * positionPerso,
+                              Evenement * event) {
     if (event->key[SDLK_LEFT])
         monde->setHoriScroll(monde->getHoriScroll() - MOVE_SPEED_SCROLL);
 
@@ -97,19 +100,19 @@ void Deplacement::bougerLaMap(Monde * monde,SDL_Rect * positionPerso,Evenement *
         positionPerso->y = 0;
 
     // si la fenetre va plus loin que le perso
-    if ( monde->getHoriScroll() >  positionPerso->x/2 ){
+    if ( monde->getHoriScroll() >  positionPerso->x/2 ) {
         monde->setHoriScroll(positionPerso->x/2);
     }
 
-    if ( monde->getHoriScroll() <  positionPerso->x/2 ){
+    if ( monde->getHoriScroll() <  positionPerso->x/2 ) {
         monde->setHoriScroll(positionPerso->x/2);
     }
 
-    if ( monde->getVertiScroll() <  positionPerso->y/2 ){
+    if ( monde->getVertiScroll() <  positionPerso->y/2 ) {
         monde->setVertiScroll(positionPerso->y/2);
     }
 
-    if ( monde->getVertiScroll() >  positionPerso->y/2 ){
+    if ( monde->getVertiScroll() >  positionPerso->y/2 ) {
         monde->setVertiScroll(positionPerso->y/2);
     }
 
@@ -127,7 +130,7 @@ void Deplacement::bougerLaMap(Monde * monde,SDL_Rect * positionPerso,Evenement *
                 * monde->getHauteurTuile() - HAUTEUR_FENETRE - 1);
 }
 
-int Deplacement::signeValeur(int x){
+int Deplacement::signeValeur(int x) {
     if ( x == 0) {
         return 0;
     } else if ( x < 0 ) {
