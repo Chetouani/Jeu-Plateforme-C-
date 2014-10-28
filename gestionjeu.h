@@ -1,10 +1,13 @@
 #ifndef GESTIONJEU_H
 #define GESTIONJEU_H
+#define FENETRE_PRINCIPALE getSurfaceEcran()
 #include <SDL.h>
 #include <SDL_image.h>
 #include <cstdlib>
 #include <QString>
 #include <QList>
+#include "exceptiongame.h"
+
 class GestionJeu
 {
 private:
@@ -44,7 +47,7 @@ public:
      * @param parent Surface où doit être placée celle-ci.
      * (NULL = fenêtre principale)
      */
-    SDL_Surface *ajouterSurface(int largeur, int hauteur,
+    SDL_Surface *creerSurface(Uint16 largeur, Uint16 hauteur,
                         Sint16 x, Sint16 y, SDL_Surface * parent = NULL );
 
     /**
@@ -65,7 +68,8 @@ public:
      */
     void libererSurfaces();
     /**
-     * @brief Permet de colorier une zone d'une surface
+     * @brief Permet de colorier une zone d'une surface (SANS METTRE A JOUR LA
+     * FENETRE !!!)
      * @param surface La surface à colorier
      * @param zone La zone à colorier (NULL = toute la surface)
      * @param rouge Niveau de rouge
@@ -74,7 +78,19 @@ public:
      */
     void colorierSurface(SDL_Surface *surface,
                          SDL_Rect *zone = NULL,
-                         int rouge = 0, int vert = 0, int bleu = 0);
+                         Uint8 rouge = 0, Uint8 vert = 0, Uint8 bleu = 0);
+
+    /**
+     * @brief Permet de placer une surface sur une autre.
+     * @param surface La surface qu'il faut placer
+     * @param parent  La surface sur laquelle placer la surface désirée
+     * @param largeur Largeur de la surface
+     * @param hauteur Hauteur de la surface
+     * @param x Là où sera placée la surface en X
+     * @param y Là où sera placée la surface en Y
+     */
+    void placerSurface(SDL_Surface * surface, SDL_Surface * parent,
+                       Uint16 largeur,Uint16 hauteur, Sint16 x, Sint16 y);
 
     /**
      * @brief getSurfaceEcran
@@ -87,6 +103,20 @@ public:
      * @param value
      */
     void setSurfaceEcran(SDL_Surface *value);
+
+    /**
+     * @brief getListeSurfaces
+     * @return
+     */
+    QList<SDL_Surface *> getListeSurfaces() const;
+
+    /**
+     * @brief setListeSurfaces
+     * @param value
+     */
+    void setListeSurfaces(const QList<SDL_Surface *> &value);
+
+    SDL_Surface *getDerniereSurfaceCree();
 };
 
 #endif // GESTIONJEU_H

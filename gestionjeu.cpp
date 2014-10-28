@@ -12,6 +12,21 @@ void GestionJeu::setSurfaceEcran(SDL_Surface *value)
 {
     surfaceEcran = value;
 }
+
+QList<SDL_Surface *> GestionJeu::getListeSurfaces() const
+{
+    return listeSurfaces;
+}
+
+void GestionJeu::setListeSurfaces(const QList<SDL_Surface *> &value)
+{
+    listeSurfaces = value;
+}
+
+SDL_Surface *GestionJeu::getDerniereSurfaceCree()
+{
+    return listeSurfaces.back();
+}
 GestionJeu::GestionJeu()
 {
     this->nomJeu = "";
@@ -39,22 +54,17 @@ void GestionJeu::actualiserFenetre()
 
 void GestionJeu::pauseFenetre()
 {
-    //Mettre le programme "en pause"
-    bool continuer = true;
-    SDL_Event event;
-    while (continuer)
-    {
+    SDL_Event event;     //Mettre le programme "en pause"
+    SDL_WaitEvent(&event);
+    while (event.type != SDL_QUIT)
         SDL_WaitEvent(&event);
-        if (event.type == SDL_QUIT)
-            continuer = false;
-    }
 }
 
 void GestionJeu::initialiserJeu()
 {
     if (SDL_Init(SDL_INIT_VIDEO) == -1) // Démarrage de la SDL. Si erreur :
     {
-        //throw JeuException(SDL_GetError());
+        throw ExceptionGame(SDL_GetError());
     }
 }
 
@@ -116,20 +126,23 @@ void GestionJeu::creerFenetre(int largeur, int hauteur,
     surfaceEcran = SDL_SetVideoMode(largeur, hauteur,
                                     bitsParPixels, options);
     if (surfaceEcran == NULL) //La création de la fenêtre a échoué
-        //throw JeuException(SDL_GetError());
+        throw ExceptionGame(SDL_GetError());
     //nom de l'app
     SDL_WM_SetCaption(this->nomJeu.toStdString().c_str(), NULL);
 }
 
-SDL_Surface * GestionJeu::ajouterSurface(int largeur, int hauteur,
-                                Sint16 x, Sint16 y, SDL_Surface *parent)
+
+
+SDL_Surface * GestionJeu::creerSurface(Uint16 largeur, Uint16 hauteur,
+                                        Sint16 x, Sint16 y, SDL_Surface *parent)
 {
     if (parent == NULL)
-        parent = getSurfaceEcran();
-    SDL_Rect pos = {x, y};
+        parent = FENETRE_PRINCIPALE;
+    SDL_Rect pos = {x, y, largeur, hauteur};
 
-    listeSurfaces.append(SDL_CreateRGBSurface(SDL_HWSURFACE, largeur,
-                                              hauteur, 32, 0, 0, 0, 0));
+    listeSurfaces.append(SDL_CreateRGBSurface(SDL_HWSURFACE,
+                                              largeur,hauteur, 32, 0, 0, 0, 0));
+
     SDL_BlitSurface(listeSurfaces.back(), NULL, parent, &pos);
     actualiserFenetre();
     return listeSurfaces.back();
@@ -140,7 +153,7 @@ SDL_Surface *GestionJeu::ajouterImage(const char *pathImage, Uint16 largeur,
                                       SDL_Surface *parent)
 {
     if (parent == NULL)
-        parent = getSurfaceEcran();
+        parent = FENETRE_PRINCIPALE;
     SDL_Rect pos = {x, y, largeur, hauteur};
 
     listeSurfaces.append(IMG_Load(pathImage));
@@ -160,8 +173,17 @@ void GestionJeu::libererSurfaces()
 
 void GestionJeu::colorierSurface(SDL_Surface *surface,
                                  SDL_Rect *zone,
-                                 int rouge, int vert, int bleu)
+                                 Uint8 rouge, Uint8 vert, Uint8 bleu)
 {
-    SDL_FillRect(surface, zone, SDL_MapRGB(surface->format, rouge, vert, bleu));
+    Uint32 couleurSurface = SDL_MapRGB(surface->format, rouge, vert, bleu);
+    SDL_FillRect(surface, zone, couleurSurface);
+}
+
+void GestionJeu::placerSurface(SDL_Surface *surface, SDL_Surface *parent,
+                               Uint16 largeur, Uint16 hauteur,
+                               Sint16 x, Sint16 y)
+{
+    SDL_Rect pos = {x, y, largeur, hauteur};
+    SDL_BlitSurface(surface, NULL, parent, &pos);
     actualiserFenetre();
 }

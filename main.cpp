@@ -6,15 +6,18 @@
 #include "monde.h"
 #include "evenement.h"
 #include "deplacement.h"
-
+#include "gestionjeu.h"
+#define UTILISER_LA_VRAM SDL_HWSURFACE
 #undef main
 
 const int LARGEUR_FENETRE = 1200;
 const int HAUTEUR_FENETRE = 600;
 
 using namespace std;
+void testsMourad();
 
-void AfficherPerso(SDL_Rect* posi,SDL_Surface* perso,SDL_Surface* screen,int xscroll,int yscroll)
+void AfficherPerso(SDL_Rect* posi,SDL_Surface* perso,SDL_Surface* screen,
+                   int xscroll,int yscroll)
 {
     SDL_Rect positionsurecran = *posi;
     positionsurecran.x -= xscroll;
@@ -22,7 +25,9 @@ void AfficherPerso(SDL_Rect* posi,SDL_Surface* perso,SDL_Surface* screen,int xsc
     SDL_BlitSurface(perso,NULL,screen,&positionsurecran);
 }
 
-int main(int argc, char **argv){
+int main(int argc, char **argv) {
+//--------------------------------- MOURAD -----------------------------------//
+    //testsMourad(); return 0; //Tests à titre personnel.
 
     QApplication a(argc, argv);
     MainWindow w;
@@ -30,6 +35,10 @@ int main(int argc, char **argv){
     a.exec();
     if (w.quit) //Si l'user a cliqué sur "Quitter"
         return 1;
+//------------------------------- FIN MOURAD ---------------------------------//
+
+//---------------------------------- ABDEL -----------------------------------//
+
     // initialise SDL
     if ( SDL_Init(SDL_INIT_VIDEO) == -1) {
         cerr << "Erreur d'initialisation de SDL" << endl;
@@ -40,13 +49,13 @@ int main(int argc, char **argv){
                                              32,SDL_HWSURFACE);
 
     // renomer la fenetre
-    SDL_WM_SetCaption("Jeu de plateforme",NULL);
+    SDL_WM_SetCaption("Jeu de plateforme", NULL);
 
     // demander une couleur en UINT32
     // SDL_MAPRGB(format de couleur de la surface,R,V,B)
     // Uint32 couleurFond = SDL_MapRGB(fenetre->format,164,0,0); //bleu ciel
     // remplir une surface d'une couleur
-    // param -> la Surface a remplir, la partie de la surface , la couleur UINT32
+    // param -> la Surface a remplir, la partie de la surface, la couleur UINT32
     //SDL_FillRect(fenetre,NULL,couleurFond);
 
     // notre personnage
@@ -75,7 +84,8 @@ int main(int argc, char **argv){
              d.bougerLaMap(m,&positionPerso,evt);
              d.Evolue(evt,m,&positionPerso,LARGEUR_TILE,HAUTEUR_TILE);
              m->AfficherMonde(fenetre);
-             AfficherPerso(&positionPerso,perso,fenetre,m->getHoriScroll(),m->getVertiScroll());
+             AfficherPerso(&positionPerso,perso,fenetre,
+                           m->getHoriScroll(),m->getVertiScroll());
 
              SDL_Flip(fenetre);
              SDL_Delay(5);
@@ -91,5 +101,26 @@ int main(int argc, char **argv){
     SDL_FreeSurface(fenetre);
     SDL_Quit();
     exit(EXIT_SUCCESS);
+
+//------------------------------- FIN ABDEL ----------------------------------//
 }
 
+
+
+void testsMourad()
+{
+    GestionJeu SDL("Ma super application");
+    SDL.initialiserJeu();
+    SDL.creerFenetre(480, 360, 32, UTILISER_LA_VRAM | SDL_DOUBLEBUF);
+
+    SDL.creerSurface(125, 125, 0, 0, NULL); //Renvoie aussi la surface créée
+    SDL.colorierSurface(SDL.getDerniereSurfaceCree(), NULL, 255, 255, 255);
+    SDL.placerSurface(SDL.getDerniereSurfaceCree(), SDL.FENETRE_PRINCIPALE, 0, 0, 24, 49);
+
+    SDL.ajouterImage("img/pikachu.png", 128, 128, 300, 300, NULL);
+    SDL.ajouterImage("img/pikachu.png", 128, 128, 0, 300, NULL);
+
+    SDL.pauseFenetre();
+    SDL.libererSurfaces();
+    SDL.fermerJeu();
+}
