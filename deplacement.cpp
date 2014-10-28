@@ -51,7 +51,7 @@ void Deplacement::Affine(Monde* carte,SDL_Rect* perso,int vx,int vy) {
 
 void Deplacement::Deplace(Monde* carte,SDL_Rect* perso,int vx,int vy,
                           int LARGEUR_TILE,int HAUTEUR_TILE){
-    // PAS UTILE CAR LA VITESSE DU JOUEUR NE DEPASSE PAS LA TAILLE DU PERSO
+    // PAS UTILE CAR LAVITESSE DU JOUEUR NE DEPASSE PAS LA TAILLE DU PERSO
     /*
     if (vx>=LARGEUR_TILE || vy>=HAUTEUR_TILE){
         Deplace(carte,perso,vx/2,vy/2,LARGEUR_TILE,HAUTEUR_TILE);
