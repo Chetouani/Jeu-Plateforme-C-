@@ -19,7 +19,6 @@ void AfficherPerso(SDL_Rect* posi,SDL_Surface* perso,SDL_Surface* screen,int xsc
     SDL_Rect positionsurecran = *posi;
     positionsurecran.x -= xscroll;
     positionsurecran.y -= yscroll;
-  //  SDL_FillRect(screen,&positionsurecran,0x00FF00);
     SDL_BlitSurface(perso,NULL,screen,&positionsurecran);
 
 }

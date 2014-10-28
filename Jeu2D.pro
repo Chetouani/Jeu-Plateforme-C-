@@ -3,6 +3,14 @@ CONFIG += console
 CONFIG -= app_bundle
 CONFIG -= qt
 
+QMAKE_CXXFLAGS += -std=c++11 -pedantic-errors
+
+INCLUDEPATH += $$PWD/SDL/include/SDL
+DEPENDPATH += $$PWD/SDL/include/SDL
+
+INCLUDEPATH += $$PWD/SDL/lib
+DEPENDPATH += $$PWD/SDL/lib
+
 SOURCES += main.cpp \
     monde.cpp \
     tuile.cpp \
@@ -10,13 +18,7 @@ SOURCES += main.cpp \
     deplacement.cpp \
     exceptiongame.cpp
 
-
-LIBS += -L C:/SDL-1.2.15/lib -lSDL -lSDL_image
-
-INCLUDEPATH += C:/SDL-1.2.15/include/SDL
-INCLUDEPATH += C:/SDL_image-1.2.10/include
-
-QMAKE_CXXFLAGS += -std=c++11 -pedantic-errors
+LIBS += -L SDL/lib/ -lmingw32 -lSDLmain -llibSDL -lSDL_image -lSDL_ttf
 
 HEADERS += \
     monde.h \
