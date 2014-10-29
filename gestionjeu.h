@@ -1,6 +1,7 @@
 #ifndef GESTIONJEU_H
 #define GESTIONJEU_H
 #define FENETRE_PRINCIPALE getSurfaceEcran()
+#define TOUCHE event.key.keysym.sym
 #include <SDL.h>
 #include <SDL_image.h>
 #include <cstdlib>
@@ -14,16 +15,67 @@ private:
     QString nomJeu;
     SDL_Surface *surfaceEcran = NULL;
     QList<SDL_Surface *> listeSurfaces;
-public:
 
+public:
+    /**
+     * @brief GestionJeu
+     */
     GestionJeu();
+
+    /**
+     * @brief GestionJeu
+     * @param nomJeu
+     */
     GestionJeu(const char *nomJeu);
+
+    /**
+     * @brief GestionJeu
+     * @param nomJeu
+     */
     GestionJeu(QString nomJeu);
+
+    /**
+     * @brief GestionJeu
+     * @param nomJeu
+     */
     GestionJeu(std::string nomJeu);
+
+    /**
+     * @brief actualiserFenetre
+     */
     void actualiserFenetre();
+
+    /**
+     * @brief Met la fenêtre en pause jusqu'à ce que l'utilisateur
+     * ferme la fenetre
+     */
     void pauseFenetre();
+
+    /**
+     * @brief Permet de lancer le coeur du jeu (Boucle infinie)
+     * @param adresseFonctionAExecuter Fonction qu'exécutera le jeu
+     * <strong>Attention : Si le code de retour de la fonction est
+     * différent de zéro, la fonction s'arrête</strong>
+     * Le coeur continue donc TANT QUE la fonction retourne 0
+     *
+     * C'est au programmeur donc, de retourner une valeur autre que 0 en cas de
+     * fin
+     */
+    void coeurJeu(int (*adresseFonctionAExecuter)());
+    /**
+     * @brief initialiserJeu
+     */
     void initialiserJeu();
+
+    /**
+     * @brief setNomJeu
+     * @param nom
+     */
     void setNomJeu(const char *nom);
+
+    /**
+     * @brief fermerJeu
+     */
     void fermerJeu();
 
     /**

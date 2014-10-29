@@ -49,7 +49,7 @@ GestionJeu::GestionJeu(string nomApp)
 
 void GestionJeu::actualiserFenetre()
 {
-    SDL_Flip(this->surfaceEcran); /* Mise à jour de l'écran */
+    SDL_Flip(FENETRE_PRINCIPALE); /* Mise à jour de l'écran */
 }
 
 void GestionJeu::pauseFenetre()
@@ -58,6 +58,11 @@ void GestionJeu::pauseFenetre()
     SDL_WaitEvent(&event);
     while (event.type != SDL_QUIT)
         SDL_WaitEvent(&event);
+}
+
+void GestionJeu::coeurJeu(int (*adresseFonctionAExecuter)())
+{
+    while (adresseFonctionAExecuter() == 0);
 }
 
 void GestionJeu::initialiserJeu()
@@ -142,7 +147,6 @@ SDL_Surface * GestionJeu::creerSurface(Uint16 largeur, Uint16 hauteur,
 
     listeSurfaces.append(SDL_CreateRGBSurface(SDL_HWSURFACE,
                                               largeur,hauteur, 32, 0, 0, 0, 0));
-
     SDL_BlitSurface(listeSurfaces.back(), NULL, parent, &pos);
     actualiserFenetre();
     return listeSurfaces.back();
@@ -157,6 +161,7 @@ SDL_Surface *GestionJeu::ajouterImage(const char *pathImage, Uint16 largeur,
     SDL_Rect pos = {x, y, largeur, hauteur};
 
     listeSurfaces.append(IMG_Load(pathImage));
+
     SDL_BlitSurface(listeSurfaces.back(), NULL, parent, &pos);
     actualiserFenetre();
     return listeSurfaces.back();

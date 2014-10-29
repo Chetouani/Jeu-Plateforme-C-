@@ -9,12 +9,11 @@
 #include "gestionjeu.h"
 #define UTILISER_LA_VRAM SDL_HWSURFACE
 #undef main
-
 const int LARGEUR_FENETRE = 1200;
 const int HAUTEUR_FENETRE = 600;
 
 using namespace std;
-void testsMourad();
+
 
 void AfficherPerso(SDL_Rect* posi,SDL_Surface* perso,SDL_Surface* screen,
                    int xscroll,int yscroll)
@@ -27,7 +26,6 @@ void AfficherPerso(SDL_Rect* posi,SDL_Surface* perso,SDL_Surface* screen,
 
 int main(int argc, char **argv) {
 //--------------------------------- MOURAD -----------------------------------//
-    //testsMourad(); return 0; //Tests à titre personnel.
 
     QApplication a(argc, argv);
     MainWindow w;
@@ -103,24 +101,4 @@ int main(int argc, char **argv) {
     exit(EXIT_SUCCESS);
 
 //------------------------------- FIN ABDEL ----------------------------------//
-}
-
-
-
-void testsMourad()
-{
-    GestionJeu SDL("Ma super application");
-    SDL.initialiserJeu();
-    SDL.creerFenetre(480, 360, 32, UTILISER_LA_VRAM | SDL_DOUBLEBUF);
-
-    SDL.creerSurface(125, 125, 0, 0, NULL); //Renvoie aussi la surface créée
-    SDL.colorierSurface(SDL.getDerniereSurfaceCree(), NULL, 255, 255, 255);
-    SDL.placerSurface(SDL.getDerniereSurfaceCree(), SDL.FENETRE_PRINCIPALE, 0, 0, 24, 49);
-
-    SDL.ajouterImage("img/pikachu.png", 128, 128, 300, 300, NULL);
-    SDL.ajouterImage("img/pikachu.png", 128, 128, 0, 300, NULL);
-
-    SDL.pauseFenetre();
-    SDL.libererSurfaces();
-    SDL.fermerJeu();
 }
