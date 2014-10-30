@@ -6,6 +6,7 @@
 #include "monde.h"
 #include "evenement.h"
 #include "deplacement.h"
+#include "monstre.h"
 
 #undef main
 
@@ -61,8 +62,15 @@ int main(int argc, char **argv){
     int LARGEUR_TILE,HAUTEUR_TILE;
     LARGEUR_TILE = 57;
     HAUTEUR_TILE = 37;
-
-
+//TEST PAR FSL
+    SDL_Rect positionMonstre;
+    positionMonstre.h=57;
+    positionMonstre.w=37;
+    positionMonstre.x=500;
+    positionMonstre.y=300;
+    Monstre monstre= Monstre("monster/eyeyeL.gif","monster/eyeyeR.gif",positionMonstre,
+                             fenetre);
+//FIN TEST
     Deplacement d(LARGEUR_FENETRE,HAUTEUR_FENETRE);
     Monde * m;
     try{
@@ -76,7 +84,9 @@ int main(int argc, char **argv){
              d.Evolue(evt,m,&positionPerso,LARGEUR_TILE,HAUTEUR_TILE);
              m->AfficherMonde(fenetre);
              AfficherPerso(&positionPerso,perso,fenetre,m->getHoriScroll(),m->getVertiScroll());
-
+//TEST FSL
+             monstre.deplacement(fenetre);
+//FIN TEST
              SDL_Flip(fenetre);
              SDL_Delay(5);
          }

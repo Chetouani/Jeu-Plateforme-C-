@@ -21,7 +21,8 @@ SOURCES += main.cpp \
     deplacement.cpp \
     exceptiongame.cpp \
     gestionjeu.cpp \
-    mainwindow.cpp
+    mainwindow.cpp \
+    monstre.cpp
 
 LIBS += -L SDL/lib/ -lmingw32 -lSDLmain -llibSDL -lSDL_image -lSDL_ttf
 
@@ -33,7 +34,8 @@ HEADERS += \
     deplacement.h \
     exceptiongame.h \
     gestionjeu.h \
-    mainwindow.h
+    mainwindow.h \
+    monstre.h
 
 OTHER_FILES +=
 
