@@ -7,7 +7,7 @@ Monde::Monde(string nomFichier
     _largeurFenetre = largeurFenetre;
     _hauteurFenetre = hauteurFenetre;
     _horiScroll = 0;
-    _vertiScroll = hauteurFenetre;
+    _vertiScroll = 0;
 
     // ouvre en lecture
     ifstream fichier(nomFichier.c_str(), ios::in);
@@ -15,7 +15,7 @@ Monde::Monde(string nomFichier
         chargerInfoDepuisFichier(fichier);
         chargerNiveauDepuisFichier(fichier);
     }else{
-       throw new ExceptionGame("Erreur d'ouverture du fichier");
+        throw new ExceptionGame("Erreur d'ouverture du fichier");
     }
 
     fichier.close();
@@ -44,23 +44,22 @@ int Monde::getNbrTuilesEnColonneMonde() const{
     return _nbrTuilesEnColonneMonde;
 }
 int Monde::getNbrTuilesEnLigneMonde()const{
-   return _nbrTuilesEnLigneMonde;
+    return _nbrTuilesEnLigneMonde;
 }
 
-void Monde::AfficherMonde(SDL_Surface * fenetre){
-
+void Monde::AfficherMonde(SDL_Surface * fenetre,SDL_Rect* perso){
     SDL_Rect rectDest;
     int numTuile;
     int minX,minY,maxX,maxY;
-    minX = _horiScroll / _largeurTuile-1;
-    minY = _vertiScroll / _hauteurTuile-1;
+    minX = _horiScroll / _largeurTuile;
+    minY = _vertiScroll / _hauteurTuile;
     maxX = ((_horiScroll + _largeurFenetre) / _largeurTuile);
     maxY = ((_vertiScroll + _hauteurFenetre) / _hauteurTuile);
 
     for ( int i = minX; i <=  maxX ; i++){
         for ( int j = minY ; j <= maxY ; j++){
             rectDest.x = i * _largeurTuile - _horiScroll;
-            rectDest.y = j * _hauteurTuile - _vertiScroll;
+            rectDest.y = j * _hauteurTuile -_vertiScroll;
 
             if ( i < 0
                  || i >= _nbrTuilesEnColonneMonde
@@ -69,9 +68,7 @@ void Monde::AfficherMonde(SDL_Surface * fenetre){
                 numTuile = 0;
             }else{
                 numTuile = _schema[j][i];
-
             }
-
             SDL_BlitSurface(_imagesDesTuiles
                             ,&(_tuiles[numTuile].getRectangle()),fenetre,&rectDest);
         }
@@ -80,25 +77,51 @@ void Monde::AfficherMonde(SDL_Surface * fenetre){
 
 bool Monde::CollisionDecor(SDL_Rect* perso){
     int xmin,xmax,ymin,ymax,i,j,indicetile;
-    xmin = perso->x / _largeurTuile;
-    ymin = perso->y / _hauteurTuile;
-    xmax = (perso->x + perso->w -1) / _largeurTuile;
-    ymax = (perso->y + perso->h -1) / _hauteurTuile;
+    xmin = (perso->x +_horiScroll)  / _largeurTuile;
+    ymin = (perso->y +_vertiScroll) / _hauteurTuile;
+    xmax = floor((perso->x + perso->w + _horiScroll) / _largeurTuile);
+    ymax = floor((perso->y + perso->h + _vertiScroll) / _hauteurTuile);
 
+    cout << "perso.X :  " << perso->x << " perso.Y :  " << perso->y<< endl;
+    cout << "perso.w :  " << perso->w << " perso.h :  " << perso->h<< endl;
+    cout << "h scroll :  " << _horiScroll << " v SCR :  " << _vertiScroll<< endl;
+    cout << "L tuile :  " << _largeurTuile << " Htuilee:  " << _hauteurTuile<< endl;
+    cout << "Xmin :  " << xmin<< " Xmax :  " <<xmax << endl;
+    cout << "ymin :  " << ymin<< " ymin :  " <<ymax << endl << endl;
     if (xmin < 0
             || ymin < 0
             || xmax >= _nbrTuilesEnColonneMonde
-            || ymax >= _nbrTuilesEnLigneMonde)
-        return 1;
+            || ymax >= _nbrTuilesEnLigneMonde){
+
+        return true;
+    }
+    // ne pas sortir hors de la fenetre
+    if (perso->x < 0
+            || perso->y < 0
+            || perso->x >= _largeurFenetre
+            || perso->y >= _hauteurFenetre){
+        return true;
+    }
+    // ne pas sortir du monde
+    if (perso->x < 0
+            || perso->y < 0
+            || perso->x >= _nbrTuilesEnColonneMonde * _largeurTuile
+            || perso->y >= _nbrTuilesEnLigneMonde * _hauteurTuile ){
+        return true;
+    }
+
 
     for ( i = xmin ; i <=  xmax  ; i++) {
         for ( j = ymin ; j <= ymax  ; j++){
             indicetile = _schema[j][i];
             if (_tuiles[indicetile].getType() == TypeTuile::MUR){
                 return true;
+            }else{
+
             }
         }
     }
+
     return false;
 }
 
@@ -146,11 +169,11 @@ void Monde::chargerInfoDepuisFichier(ifstream &fichier) throw(ExceptionGame){
                                                ,j*_hauteurTuile);
                 fichier >> typeTuile;
                 fichier >> typeTuile;
-                if(typeTuile.compare("mur") == 0){
+                if(typeTuile.find("mur") != string::npos){
                     _tuiles[numTuile].setType(TypeTuile::MUR);
-                }else if(typeTuile.compare("eau") == 0){
+                }else if(typeTuile.find("eau")  != string::npos){
                     _tuiles[numTuile].setType(TypeTuile::EAU);
-                }else if(typeTuile.compare("ciel") == 0){
+                }else if(typeTuile.find("ciel")  != string::npos){
                     _tuiles[numTuile].setType(TypeTuile::CIEL);
                 }else{
                     _tuiles[numTuile].setType(TypeTuile::CIEL);
@@ -207,4 +230,12 @@ void Monde::chargerNiveauDepuisFichier(ifstream& fichier){
             }
         }
     }
+}
+int Monde::getMaxX()const{
+    return this->getNbrTuilesEnColonneMonde()
+            * this->getLargeurTuile();
+}
+int Monde::getMaxY()const{
+    return this->getNbrTuilesEnLigneMonde()
+            * this->getHauteurTuile();
 }

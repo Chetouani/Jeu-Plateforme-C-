@@ -7,6 +7,7 @@ INPUT(
 ./release\exceptiongame.o
 ./release\gestionjeu.o
 ./release\mainwindow.o
+./release\Personnage.o
 ./release\qrc_images.o
 ./release\moc_mainwindow.o
 );

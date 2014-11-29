@@ -9,7 +9,7 @@ Deplacement::Deplacement(int lF, int hF){
 // si c'est en bas on ferra un deplacement
 // avec un vecteurX = 0 et un vecteurY = + 2
 void Deplacement::RecupererVecteur(Evenement* in,int* vx,int* vy){
-    int vitesse = VITESSE_JOUEUR;
+    int vitesse = 0;
     *vx = *vy = 0; 
     if (in->key[SDLK_UP]){
         *vy = -vitesse;
@@ -32,7 +32,10 @@ bool Deplacement::EssaiDeplacement(Monde* carte,SDL_Rect* perso,int vx,int vy) {
     test.y+=vy;
     if ( ! carte->CollisionDecor(&test) ){
         *perso = test;
+        cout << "PAS COLI\n";
         return true;
+    }else{
+        cout << " COLI\n";
     }
     return false;
 }
@@ -52,13 +55,13 @@ void Deplacement::Affine(Monde* carte,SDL_Rect* perso,int vx,int vy) {
 void Deplacement::Deplace(Monde* carte,SDL_Rect* perso,int vx,int vy,
                           int LARGEUR_TILE,int HAUTEUR_TILE){
     // PAS UTILE CAR LA VITESSE DU JOUEUR NE DEPASSE PAS LA TAILLE DU PERSO
-    /*
+
     if (vx>=LARGEUR_TILE || vy>=HAUTEUR_TILE){
         Deplace(carte,perso,vx/2,vy/2,LARGEUR_TILE,HAUTEUR_TILE);
         Deplace(carte,perso,vx-vx/2,vy-vy/2,LARGEUR_TILE,HAUTEUR_TILE);
         return;
     }
-    */
+
     // on test si le deplacement est possible sinon on bouge pas
     if (EssaiDeplacement(carte,perso,vx,vy))
         return;
@@ -74,18 +77,18 @@ void Deplacement::Evolue(Evenement* in,Monde* carte,SDL_Rect* perso,
 
 void Deplacement::bougerLaMap(Monde * monde,SDL_Rect * positionPerso,
                               Evenement * event) {
-    if (event->key[SDLK_LEFT])
-        monde->setHoriScroll(monde->getHoriScroll() - MOVE_SPEED_SCROLL);
-
+    if (event->key[SDLK_LEFT]){
+        monde->setHoriScroll(monde->getHoriScroll()  - 1);
+    }
     if (event->key[SDLK_RIGHT])
-         monde->setHoriScroll(monde->getHoriScroll() + MOVE_SPEED_SCROLL);
+         monde->setHoriScroll(monde->getHoriScroll() - 1);
 
     if (event->key[SDLK_UP])
-        monde->setVertiScroll(monde->getVertiScroll() - MOVE_SPEED_SCROLL);
+        monde->setVertiScroll(monde->getVertiScroll()- 1 );
 
-    if (event->key[SDLK_DOWN])
-        monde->setVertiScroll(monde->getVertiScroll() + MOVE_SPEED_SCROLL);
-
+    if (event->key[SDLK_DOWN]){
+        monde->setVertiScroll(monde->getVertiScroll() - 1);
+    }
     // limitation
     if ( monde->getHoriScroll() < 0 )
         monde->setHoriScroll(0);
@@ -93,7 +96,7 @@ void Deplacement::bougerLaMap(Monde * monde,SDL_Rect * positionPerso,
     if ( monde->getVertiScroll() < 0 )
         monde->setVertiScroll(0);
     // limitation du perso
-    if ( positionPerso->x < 0 )
+   if ( positionPerso->x < 0 )
         positionPerso->x = 0;
 
     if ( positionPerso->y < 0 )

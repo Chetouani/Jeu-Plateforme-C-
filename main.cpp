@@ -7,10 +7,11 @@
 #include "evenement.h"
 #include "deplacement.h"
 #include "gestionjeu.h"
+#include "Personnage.h"
 #define UTILISER_LA_VRAM SDL_HWSURFACE
 #undef main
-const int LARGEUR_FENETRE = 1200;
-const int HAUTEUR_FENETRE = 600;
+const int LARGEUR_FENETRE = 1000;
+const int HAUTEUR_FENETRE = 700;
 
 using namespace std;
 
@@ -26,13 +27,14 @@ void AfficherPerso(SDL_Rect* posi,SDL_Surface* perso,SDL_Surface* screen,
 
 int main(int argc, char **argv) {
 //--------------------------------- MOURAD -----------------------------------//
-
+/*
     QApplication a(argc, argv);
     MainWindow w;
     w.show();
     a.exec();
     if (w.quit) //Si l'user a cliqué sur "Quitter"
         return 1;
+*/
 //------------------------------- FIN MOURAD ---------------------------------//
 
 //---------------------------------- ABDEL -----------------------------------//
@@ -57,20 +59,7 @@ int main(int argc, char **argv) {
     //SDL_FillRect(fenetre,NULL,couleurFond);
 
     // notre personnage
-    SDL_Surface * perso =  IMG_Load("persoD.png");
-    // donne une position
-    SDL_Rect positionPerso;
-    positionPerso.h = 57;
-    positionPerso.w = 37;
-    positionPerso.x = 0;
-    positionPerso.y = 500;
-
-    int LARGEUR_TILE,HAUTEUR_TILE;
-    LARGEUR_TILE = 57;
-    HAUTEUR_TILE = 37;
-
-
-    Deplacement d(LARGEUR_FENETRE,HAUTEUR_FENETRE);
+    Personnage * hero = new Personnage("img/walkright.png", 0, 0,LARGEUR_FENETRE,HAUTEUR_FENETRE);
     Monde * m;
     try{
          m = new Monde("MaMapTest.txt",LARGEUR_FENETRE,HAUTEUR_FENETRE);
@@ -78,14 +67,17 @@ int main(int argc, char **argv) {
 
          while(!evt->key[SDLK_ESCAPE] && !evt->quit){
 
-             evt->ActiveAttenteEvenement();
-             d.bougerLaMap(m,&positionPerso,evt);
-             d.Evolue(evt,m,&positionPerso,LARGEUR_TILE,HAUTEUR_TILE);
-             m->AfficherMonde(fenetre);
-             AfficherPerso(&positionPerso,perso,fenetre,
-                           m->getHoriScroll(),m->getVertiScroll());
 
+             evt->ActiveAttenteEvenement();
+             SDL_Rect  positionPerso ;
+             positionPerso = hero->getPositionHero();
+             m->AfficherMonde(fenetre,&positionPerso);
+             hero->gestionDeplacement(evt,m,fenetre);
+             hero->drawAnimatedPlayer(fenetre);
+
+             //Affiche l'écran
              SDL_Flip(fenetre);
+             //Delai
              SDL_Delay(5);
          }
     }catch(ExceptionGame eg){

@@ -6,6 +6,7 @@
 #include <SDL.h>
 #include <string>
 #include <fstream>
+#include <math.h>
 
 #include "tuile.h"
 #include "exceptiongame.h"
@@ -47,7 +48,7 @@ public:
     * \brief Permet l'affichage du monde dans une fenetre
     * \param fenetre la fenetre dans laquel on affiche le monde
     */
-   void AfficherMonde(SDL_Surface * fenetre);
+   void AfficherMonde(SDL_Surface * fenetre, SDL_Rect *perso);
    /*!
     * \brief Permet de savoir si l'élément (personnage,ennemie,...,tous les éléments
     * qui bougent) est en collison avec
@@ -86,7 +87,16 @@ public:
     * \return le nombre de tuile en ligne du monde
     */
    int getNbrTuilesEnLigneMonde()const;
-
+   /*!
+       * \brief Donne la largeur du monde
+       * \return largeur du monde
+       */
+      int getMaxX()const;
+      /*!
+       * \brief Donne la hauteur du monde
+       * \return hauteur du monde
+       */
+      int getMaxY()const;
 private:
 
    int _largeurTuile;       // largeur d'une tuile

@@ -5,8 +5,7 @@
 #include "monde.h"
 #include <cmath>
 
-#define VITESSE_JOUEUR 2
-#define MOVE_SPEED_SCROLL 2
+#define MOVE_SPEED_SCROLL 5
 
 class Deplacement
 {
